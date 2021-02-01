@@ -61,7 +61,7 @@
 				this.$emit("hideQrcode")
 			},
 			// 二维码生成工具
-			couponQrCode() {
+			crtQrCode() {
 				let _this = this;
 				//#ifndef MP-WEIXIN
 				new qrCode(_this.qrcode_id, {
