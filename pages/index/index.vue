@@ -18,6 +18,7 @@
 				//二维码相关参数
 				modal_qr: false,
 				url: 'https://pixabay.com/images/search/?order=ec', // 要生成的二维码值
+				
 			}
 		},
 

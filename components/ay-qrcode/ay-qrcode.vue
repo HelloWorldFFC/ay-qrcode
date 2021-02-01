@@ -1,15 +1,22 @@
 <template>
 	<view :class="modal?'show':'hide'">
-		<canvas class="canvas" style="width: 550rpx;height: 550rpx;" canvas-id="couponQrcode"></canvas>
+		<view :style="{'margin-left':  marginLeft + 'px'}">
+			<canvas class="canvas" style="width: 550rpx;height: 550rpx;" :canvas-id="qrcode_id"></canvas>
+			<!-- <image mode="scaleToFill" :src="imagePath"></image> -->
+		</view>
 	</view>
 </template>
 
 <script>
+	var qr_we = require("./qrcode_wx.js");
 	const qrCode = require('./weapp-qrcode.js')
 	export default {
 		data() {
 			return {
-				show: true
+				show: true,
+				imagePath: '',
+				qrcode_id: 'qrcode_id',
+				marginLeft : 0,
 			}
 		},
 		props: {
@@ -22,22 +29,42 @@
 				default: ''
 			}
 		},
+		created: function() {
+			let _this = this ;
+			try {
+				let isAndroid = false ;
+			    const res = uni.getSystemInfoSync();
+			    if(res.platform == 'android'){
+					isAndroid = true ;
+				}else{
+					isAndroid = false ;
+				}
+				//app苹果二维码不居中
+				//#ifdef APP-PLUS
+				if (!isAndroid) {
+					_this.marginLeft = 46;
+				}
+				// #endif
+				
+			} catch (e) {
+			    // error
+			}
+			
+			//#ifdef MP-WEIXIN
+			_this.marginLeft = 40;
+			// #endif
+			
+		},
 		methods: {
-			// 展示二维码
-			// showQrcode(){
-			// this.modal=true;
-			// let ID=uni.getStorageSync('userInfo').id;
-			// let url="https://www.ttlwl.cn/appDownload.html?shareUserId="+ID;
-			// this.couponQrCode(url);
-			// },
+			
 			hideQrcode() {
-				// this.modal=false;
 				this.$emit("hideQrcode")
 			},
 			// 二维码生成工具
 			couponQrCode() {
 				let _this = this;
-				new qrCode('couponQrcode', {
+				//#ifndef MP-WEIXIN
+				new qrCode(_this.qrcode_id, {
 					text: this.url,
 					width: 260,
 					height: 260,
@@ -45,7 +72,35 @@
 					colorLight: "#FFFFFF",
 					correctLevel: qrCode.CorrectLevel.H
 				})
-			}
+				// #endif
+				//#ifdef MP-WEIXIN
+				_this.createQrCode(this.url, _this.qrcode_id, 260, 260);
+				// #endif
+			},
+			//#ifdef MP-WEIXIN
+
+			createQrCode: function(url, canvasId, cavW, cavH) {
+				//调用插件中的draw方法，绘制二维码图片
+				qr_we.api.draw(url, canvasId, cavW, cavH, this, this.canvasToTempImage);
+				// setTimeout(() => { this.canvasToTempImage();},100);
+
+			},
+			//获取临时缓存照片路径，存入data中
+			canvasToTempImage: function() {
+				var _this = this;
+				// uni.canvasToTempFilePath({
+				// 	canvasId: _this.qrcode_id,
+				// 	success: function(res) {
+				// 		var tempFilePath = res.tempFilePath;
+				// 		console.log(tempFilePath);
+				// 		_this.imagePath = tempFilePath;
+				// 	},
+				// 	fail: function(res) {
+				// 		console.log(res);
+				// 	}
+				// }, _this);
+			},
+			// #endif
 		},
 		mounted() {}
 	}
@@ -106,6 +161,7 @@
 	.show {
 		display: block;
 		animation: fade 0.7s;
+
 		// -moz-animation: fade 0.5s; /* Firefox */
 		// -webkit-animation: fade 0.5s; /* Safari 和 Chrome */
 		// -o-animation: fade 0.5s;
