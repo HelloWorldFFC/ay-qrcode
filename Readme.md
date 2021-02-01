@@ -26,6 +26,7 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 				//二维码相关参数
 				modal_qr: false,
 				url: 'https://pixabay.com/images/search/?order=ec', // 要生成的二维码值
+				
 			}
 		},
 
@@ -41,7 +42,7 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 				// uni.showLoading()
 				setTimeout(function() {
 					// uni.hideLoading()
-					_this.$refs.qrcode.couponQrCode()
+					_this.$refs.qrcode.crtQrCode()
 				}, 50)
 			},
 
