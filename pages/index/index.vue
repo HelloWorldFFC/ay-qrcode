@@ -1,12 +1,13 @@
 <template>
 	<view>
-		<view style="margin-top: 26upx;margin: 40upx;">
-			<ayQrcode ref="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" />
+		<view style="margin: 40upx;">
+			<ayQrcode ref="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300" />
 		</view>
 	</view>
 </template>
 
 <script>
+	
 	import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 	export default {
 		components: {
@@ -25,8 +26,10 @@
 		onLoad() {
 			let that = this;
 			that.showQrcode();//一加载生成二维码
+			
 		},
 		methods: {
+			
 			// 展示二维码
 			showQrcode() {
 				let _this = this;

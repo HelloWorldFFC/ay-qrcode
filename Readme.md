@@ -5,7 +5,14 @@
 
 ## 有疑问
 微信搜索“慢慢向好”小程序，找客服反馈，相应问题。
-				  
+
+## 属性说明
+
+|属性	|类型	|说明	|
+|--	|--	|--	|
+|url	|Number	|生成二维码的url链接|
+|width	|Number	|宽，单位px|
+|height	|Number	|高，单位px|				  
 
 ## 素材
 [图片资源](https://pixabay.com)
@@ -33,8 +40,10 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 		onLoad() {
 			let that = this;
 			that.showQrcode();//一加载生成二维码
+			
 		},
 		methods: {
+			
 			// 展示二维码
 			showQrcode() {
 				let _this = this;
@@ -58,8 +67,8 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 
 `index.vue`的`template`加入如下部分：
 ```
-<view style="margin-top: 26upx;margin: 40upx;">
-			<ayQrcode ref="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" />
+<view style="margin: 40upx;">
+			<ayQrcode ref="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300" />
 		</view>
 
 ```
