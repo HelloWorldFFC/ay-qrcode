@@ -1,7 +1,22 @@
 <template>
 	<view>
 		<view style="margin: 40upx;">
-			<ayQrcode ref="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300" />
+			<ayQrcode ref="qrcode" qrcode_id="qrcode" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300" />
+		</view>
+		
+		<view style="margin: 40upx;">
+			<ayQrcode ref="qrcode2" qrcode_id="qrcode2" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300" 
+			themeColor="#33CCCC"/>
+		</view>
+		
+		<view style="margin: 40upx;">
+			<ayQrcode ref="qrcode3" qrcode_id="qrcode3" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300"
+			 themeColor="#dd524d" 
+			 :is_themeImg="true"
+			  themeImg="https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg"
+			  :height_img="40" 
+			  :width_img="40"
+			  />
 		</view>
 	</view>
 </template>
@@ -38,6 +53,8 @@
 				setTimeout(function() {
 					// uni.hideLoading()
 					_this.$refs.qrcode.crtQrCode()
+					_this.$refs.qrcode2.crtQrCode()
+					_this.$refs.qrcode3.crtQrCode()
 				}, 50)
 			},
 
