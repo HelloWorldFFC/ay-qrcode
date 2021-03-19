@@ -18,9 +18,11 @@
 |themeColor	|String	|二维码颜色，默认#333333|
 |qrcode_id	|String	|二维码的id，默认qrcode_id,用于一个页面生成多个码|
 |is_themeImg	|Boolean	|是否有中间图片（头像等），默认没有|
-|themeImg	|String	|中间图片地址，默认https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg|
-|width_img	|Number	|宽，单位px|
-|height_img	|Number	|高，单位px|
+|themeImg	|String	|中间图片地址(可本地图片，可网络图片)|
+|h_w_img	|Number	|图片宽高，单位px|
+|width_img	|Number	|宽，单位px，已弃|
+|height_img	|Number	|高，单位px，已弃|
+
 
 ## 素材
 [图片资源](https://pixabay.com)
@@ -94,20 +96,34 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
  		
  ```
   
-(3)定义了颜色、中心图片（头像）的二维码：
+(3)定义了颜色、中心图片（头像：本地图片）的二维码：
  
   ```
   		<view style="margin: 40upx;">
   			<ayQrcode ref="qrcode3" qrcode_id="qrcode3" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300"
   			 themeColor="#dd524d" 
   			 :is_themeImg="true"
-  			  themeImg="https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg"
-  			  :height_img="40" 
-  			  :width_img="40"
+  			  themeImg="../../static/logo.png"
+  			  :h_w_img="40" 
   			  />
   		</view>
   		
   ```
+
+(4)定义了颜色、中心图片（头像：网络图片）的二维码：
+ 
+  ```
+  		<view style="margin: 40upx;">
+  			<ayQrcode ref="qrcode4" qrcode_id="qrcode4" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300"
+  			 themeColor="#ddd890" 
+  			 :is_themeImg="true"
+  			  themeImg="https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg"
+  			  :h_w_img="40" 
+  			  />
+  		</view>
+  		
+  ```
+
 
 ## 汇总组件
 [组件汇总](https://ext.dcloud.net.cn/plugin?id=4276)
@@ -119,4 +135,5 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 [参考链接](https://www.cnblogs.com/zitjubiz/p/10019789.html)
 [参考链接](https://blog.csdn.net/iamzhizhang/article/details/88715634)
 [参考链接](https://developers.weixin.qq.com/community/develop/article/doc/00002064e6c920917be96c1ed56013)
+[参考链接](https://ext.dcloud.net.cn/plugin?id=39)
  

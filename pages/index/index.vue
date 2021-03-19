@@ -13,11 +13,21 @@
 			<ayQrcode ref="qrcode3" qrcode_id="qrcode3" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300"
 			 themeColor="#dd524d" 
 			 :is_themeImg="true"
-			  themeImg="https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg"
-			  :height_img="40" 
-			  :width_img="40"
+			  themeImg="../../static/logo.png"
+			  :h_w_img="40" 
 			  />
 		</view>
+		
+		<view style="margin: 40upx;">
+			<ayQrcode ref="qrcode4" qrcode_id="qrcode4" :modal="modal_qr" :url="url" @hideQrcode="hideQrcode" :height="300" :width="300"
+			 themeColor="#ddd890" 
+			 :is_themeImg="true"
+			  themeImg="https://cdn.pixabay.com/photo/2016/11/29/13/24/balloons-1869816__340.jpg"
+			  :h_w_img="40" 
+			  />
+		</view>
+		
+		
 	</view>
 </template>
 
@@ -55,7 +65,8 @@
 					_this.$refs.qrcode.crtQrCode()
 					_this.$refs.qrcode2.crtQrCode()
 					_this.$refs.qrcode3.crtQrCode()
-				}, 50)
+					_this.$refs.qrcode4.crtQrCode()
+				}, 100)
 			},
 
 			//传入组件的方法
