@@ -128,6 +128,8 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 ## 汇总组件
 [组件汇总](https://ext.dcloud.net.cn/plugin?id=4276)
 
+## 其他有意思组件
+[动画效果之跳跃（抽奖）](https://ext.dcloud.net.cn/plugin?id=4194)
 
  ## 参考链接
 [参考链接](https://www.cnblogs.com/2186009311CFF/p/14261604.html)
@@ -136,4 +138,5 @@ import ayQrcode from "@/components/ay-qrcode/ay-qrcode.vue"
 [参考链接](https://blog.csdn.net/iamzhizhang/article/details/88715634)
 [参考链接](https://developers.weixin.qq.com/community/develop/article/doc/00002064e6c920917be96c1ed56013)
 [参考链接](https://ext.dcloud.net.cn/plugin?id=39)
+
  
