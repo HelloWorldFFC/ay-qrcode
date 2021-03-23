@@ -767,17 +767,24 @@
 				console.warn('No canvas provided to draw QR code in!')
 				return;
 			}
-
+			
+			
 			let pre_background = "#ffffff";
 			var size = Math.min(cavW, cavH);
 			str = that.utf16to8(str); //增加中文显示
 
-			var frame = that.getFrame(str),
+			var frame = that.getFrame(str);
 				// 组件中生成qrcode需要绑定this 
-				ctx = wx.createCanvasContext(canvas, $this),
-				px = Math.round(size / (width + 8));
-			var roundedSize = px * (width + 8),
-				offset = Math.floor((size - roundedSize) / 2);
+			var ctx = uni.createCanvasContext(canvas, $this);
+			var px = Math.round(size / (width ));
+			
+			var roundedSize = px * (width);
+			// var px = 1 ;
+			// var roundedSize = px * (width + 8) ;
+			
+			//var roundedSize = 0 ;
+			//var offset = Math.floor((size - roundedSize) / 2);
+			var offset = 0 ;
 			size = roundedSize;
 			//ctx.clearRect(0, 0, cavW, cavW);
 			ctx.setFillStyle(pre_background)
@@ -786,63 +793,68 @@
 			for (var i = 0; i < width; i++) {
 				for (var j = 0; j < width; j++) {
 					if (frame[j * width + i]) {
-						ctx.fillRect(px * (4 + i) + offset, px * (4 + j) + offset, px, px);
+						ctx.fillRect(px * ( i) + offset, px * ( j) + offset, px, px);
 					}
 				}
 			}
 
 			//画图片
 			if (haveImg) {
-				var x = Number(((cavW - imageSize) / 2).toFixed(2));
-				var y = Number(((cavH - imageSize) / 2).toFixed(2));
-				drawRoundedRect(ctx, x, y, imageSize, imageSize, 2, 6, true, true)
+				try {
+					var x = Number(((cavW - imageSize - 14) / 2).toFixed(2));
+					var y = Number(((cavH - imageSize -14) / 2).toFixed(2));
+					drawRoundedRect(ctx, x, y, imageSize, imageSize, imageSize / 2, 6, true, true)
 
-				let isNetImg = false;
+					let isNetImg = false;
 
-				isNetImg = imageUrl.substr(0, 4) == 'http' ? true : false;
+					isNetImg = imageUrl.substr(0, 4) == 'http' ? true : false;
 
-				if (isNetImg) {
-					//网络图片下载到本地
-					wx.getImageInfo({
-						src: imageUrl,
-						success: function(res) {
-							ctx.drawImage(res.path, x, y, imageSize, imageSize);
-							//--增加绘制完成回调
-							ctx.draw(false, function() {
-								cb();
-							})
+					if (isNetImg) {
+						//网络图片下载到本地
+						uni.getImageInfo({
+							src: imageUrl,
+							success: function(res) {
+								ctx.drawImage(res.path, x, y, imageSize, imageSize);
+								//--增加绘制完成回调
+								ctx.draw(false, function() {
+									cb();
+								})
+							}
+						})
+					} else {
+						ctx.drawImage(imageUrl, x, y, imageSize, imageSize);
+						//--增加绘制完成回调
+						ctx.draw(false, function() {
+							cb();
+						})
+					}
+
+
+
+
+					// 画圆角矩形
+					function drawRoundedRect(ctxi, x, y, width, height, r, lineWidth, fill, stroke) {
+						ctxi.setLineWidth(lineWidth);
+						ctxi.setFillStyle(pre_background);
+						ctxi.setStrokeStyle(pre_background);
+						ctxi.beginPath(); // draw top and top right corner 
+						ctxi.moveTo(x + r, y);
+						ctxi.arcTo(x + width, y, x + width, y + r, r); // draw right side and bottom right corner 
+						ctxi.arcTo(x + width, y + height, x + width - r, y + height, r); // draw bottom and bottom left corner 
+						ctxi.arcTo(x, y + height, x, y + height - r, r); // draw left and top left corner 
+						ctxi.arcTo(x, y, x + r, y, r);
+						ctxi.closePath();
+						if (fill) {
+							ctxi.fill();
 						}
-					})
-				} else {
-					ctx.drawImage(imageUrl, x, y, imageSize, imageSize);
-					//--增加绘制完成回调
-					ctx.draw(false, function() {
-						cb();
-					})
+						if (stroke) {
+							ctxi.stroke();
+						}
+					}
+				} catch (e) {
+					//TODO handle the exception
 				}
 
-
-
-
-				// 画圆角矩形
-				function drawRoundedRect(ctxi, x, y, width, height, r, lineWidth, fill, stroke) {
-					ctxi.setLineWidth(lineWidth);
-					ctxi.setFillStyle(pre_background);
-					ctxi.setStrokeStyle(pre_background);
-					ctxi.beginPath(); // draw top and top right corner 
-					ctxi.moveTo(x + r, y);
-					ctxi.arcTo(x + width, y, x + width, y + r, r); // draw right side and bottom right corner 
-					ctxi.arcTo(x + width, y + height, x + width - r, y + height, r); // draw bottom and bottom left corner 
-					ctxi.arcTo(x, y + height, x, y + height - r, r); // draw left and top left corner 
-					ctxi.arcTo(x, y, x + r, y, r);
-					ctxi.closePath();
-					if (fill) {
-						ctxi.fill();
-					}
-					if (stroke) {
-						ctxi.stroke();
-					}
-				}
 			} else {
 				//--增加绘制完成回调
 				ctx.draw(false, function() {

@@ -174,24 +174,29 @@
 						_this.imagePath = tempFilePath;
 						
 						//保存到相册
-						uni.saveFile({
-						      tempFilePath: tempFilePath,
-						      success: function (res2) {
-						        var savedFilePath = res2.savedFilePath;
+						// uni.saveFile({
+						//       tempFilePath: tempFilePath,
+						//       success: function (res2) {
+						//         var savedFilePath = res2.savedFilePath;
 								
+								
+						//       }
+						// });
+						uni.saveImageToPhotosAlbum({
+							filePath : tempFilePath ,
+							success: function (res3) {
 								uni.showModal({
 									title: '提示',
-									content: '保存成功'+savedFilePath,
+									content: '保存成功',
 									confirmText: '确定',
 									showCancel: false,
 									confirmColor: '#33CCCC',
-									success(res) {
+									success(res4) {
 										
 									}
-								})
-						      }
+								}) 
+							},
 						});
-						
 					},
 					fail: function(res) {
 						console.log(res);

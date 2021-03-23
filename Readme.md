@@ -18,7 +18,7 @@
 |themeColor	|String	|二维码颜色，默认#333333|
 |qrcode_id	|String	|二维码的id，默认qrcode_id,用于一个页面生成多个码|
 |is_themeImg	|Boolean	|是否有中间图片（头像等），默认没有|
-|themeImg	|String	|中间图片地址(可本地图片，可网络图片)|
+|themeImg	|String	|中间图片地址(可本地图片，可网络图片-微信小程序需配置download域名白名单)|
 |h_w_img	|Number	|图片宽高，单位px|
 |width_img	|Number	|宽，单位px，已弃|
 |height_img	|Number	|高，单位px，已弃|
