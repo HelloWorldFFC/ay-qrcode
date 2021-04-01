@@ -4,6 +4,7 @@
 			<!-- style="width: 550rpx;height: 550rpx;" -->
 			
 			<canvas class="canvas-qrcode" :style="style_w_h" :canvas-id="qrcode_id">
+				
 				<!-- #ifndef MP -->
 				<view v-if="modal&&is_themeImg" :style="style_w_h" class="box-img-qrcode">
 					<image :style="style_w_h_img" mode="scaleToFill" :src="themeImg"></image>
@@ -24,10 +25,16 @@
 	export default {
 		data() {
 			return {
+				isAndroid : false ,
 				show: true,
 				imagePath: '',
 				// qrcode_id: 'qrcode_id',
 				marginLeft: 0,
+				//一般的安卓app只需加30就能显示全
+				//苹果app的不加就能显示全，加了就要弄margin-left
+				//有些安卓app显示不全
+				add_num_app : 30,
+				add_num_app_key : 'rectify_code_key',
 			}
 		},
 		props: {
@@ -70,20 +77,12 @@
 			
 			
 		},
+		watch:{
+			
+		},
 		computed: {
 			style_w_h() {
-				let that = this;
-				var height = parseInt(that.height);
-				var width = parseInt(that.width);
-				var style = '';
-				if (height > 0) {
-					style = `height:${height*2}rpx;`;
-				}
-				if (width > 0) {
-					style += `width:${width*2}rpx;`;
-				}
-
-				return style;
+				return this.set_style_w_h();
 			},
 			style_w_h_img() {
 				let that = this;
@@ -101,54 +100,94 @@
 			},
 		},
 		created: function() {
-			let _this = this;
-			// try {
-			// 	let isAndroid = false ;
-			//     const res = uni.getSystemInfoSync();
-			//     if(res.platform == 'android'){
-			// 		isAndroid = true ;
-			// 	}else{
-			// 		isAndroid = false ;
-			// 	}
-			// 	//app苹果二维码不居中
-			// 	//#ifdef APP-PLUS
-			// 	if (!isAndroid) {
-			// 		_this.marginLeft = 46;
-			// 	}
-			// 	// #endif
+			let that = this;
+			try {
+				//app苹果二维码不居中
+				//#ifdef APP-PLUS
+				let isAndroid = false ;
+			    const res = uni.getSystemInfoSync();
+			    if(res.platform == 'android'){
+					isAndroid = true ;
+				}else{
+					isAndroid = false ;
+				}
+				
+				
+				if (!isAndroid) {
+					that.marginLeft = 46;
+				}
+				
+				that.isAndroid = isAndroid ;
+				
+				// #endif
 
-			// } catch (e) {
-			//     // error
-			// }
+			} catch (e) {
+			    // error
+			}
 
 			//#ifdef MP
-			//_this.marginLeft = 40;
+			//that.marginLeft = 40;
 			// #endif
 
 		},
 		methods: {
-
+			set_style_w_h(){
+				
+				let that = this;
+				var height = parseInt(that.height);
+				var width = parseInt(that.width);
+				var style = '';
+				var height = height*2 ;
+				var width = width*2 ;
+				
+				//#ifndef MP
+				var add = that.add_num_app ;
+				try {
+					const add_num = uni.getStorageSync(that.add_num_app_key);
+					if (add_num) {
+						that.add_num_app = add_num;
+					}
+					add = that.add_num_app ;
+					
+					
+				} catch (e) {
+					// error
+				
+				}
+				height +=  add;
+				width +=  add;
+				// #endif
+				
+				if (height > 0) {
+					style = `height:${height}rpx;`;
+				}
+				if (width > 0) {
+					style += `width:${width}rpx;`;
+				}
+				
+				return style;
+			},
 			hideQrcode() {
 				this.$emit("hideQrcode")
 			},
 			// 二维码生成工具
 			crtQrCode() {
-				let _this = this;
+				let that = this;
 				//#ifndef MP
-				new qrCode(_this.qrcode_id, {
+				new qrCode(that.qrcode_id, {
 					text: this.url,
-					width: _this.width,
-					height: _this.height,
-					colorDark: _this.themeColor,//#333333
+					width: that.width,
+					height: that.height,
+					colorDark: that.themeColor,//#333333
 					colorLight: "#FFFFFF",
 					correctLevel: qrCode.CorrectLevel.H,
 				})
 				// #endif
 				//#ifdef MP
-				_this.createQrCode(this.url, _this.qrcode_id, _this.width, _this.height,_this.themeColor,_this.is_themeImg,_this.themeImg,_this.h_w_img);
+				that.createQrCode(this.url, that.qrcode_id, that.width, that.height,that.themeColor,that.is_themeImg,that.themeImg,that.h_w_img);
 				// #endif
 
-				//_this.createQrCode(this.url, _this.qrcode_id, _this.width, _this.height);
+				//that.createQrCode(this.url, that.qrcode_id, that.width, that.height);
 			},
 			//#ifdef MP
 
@@ -162,16 +201,16 @@
 			// #endif
 			//获取临时缓存照片路径，存入data中
 			canvasToTempImage: function() {
-				var _this = this;
+				var that = this;
 			},
 			saveImage: function() {
-				var _this = this;
+				var that = this;
 				uni.canvasToTempFilePath({
-					canvasId: _this.qrcode_id,
+					canvasId: that.qrcode_id,
 					success: function(res) {
 						var tempFilePath = res.tempFilePath;
 						console.log(tempFilePath);
-						_this.imagePath = tempFilePath;
+						that.imagePath = tempFilePath;
 						
 						//保存到相册
 						// uni.saveFile({
@@ -201,11 +240,27 @@
 					fail: function(res) {
 						console.log(res);
 					}
-				}, _this);
+				}, that);
 			},
 			//微信小程序支持：长按二维码，提示是否保存相册
+			//安卓APP长按校正二维码
 			longtapCode(){
-				var _this = this;
+				var that = this;
+				
+				//#ifndef MP
+				uni.showModal({
+					title: '校正二维码',
+					content: '二维码是否异常',
+					confirmText: '确定',
+					confirmColor: '#33CCCC',
+					success(res) {
+						if (res.confirm) {
+							that.rectify_code_app();
+						}
+					}
+				})
+				// #endif
+				
 				//#ifdef MP-WEIXIN
 				uni.showModal({
 					title: '提示',
@@ -214,11 +269,31 @@
 					confirmColor: '#33CCCC',
 					success(res) {
 						if (res.confirm) {
-							_this.saveImage();
+							that.saveImage();
 						}
 					}
 				})
 				// #endif
+			},
+			//安卓有些手机不正常，长按可选择矫正
+			rectify_code_app(){
+				var that = this;
+				let add_num_app = that.add_num_app ;
+				add_num_app += 30 ;
+				that.add_num_app = add_num_app;
+				try {
+					//第一次长按校正设置了就不用在设置
+					uni.setStorage({
+						key: that.add_num_app_key,
+						data: add_num_app,
+						success: function() {
+							
+						}
+					});
+				} catch (e) {
+					// error
+				
+				}
 			},
 		},
 		mounted() {}
