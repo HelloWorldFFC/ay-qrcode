@@ -33,8 +33,8 @@
 				//一般的安卓app只需加30就能显示全
 				//苹果app的不加就能显示全，加了就要弄margin-left
 				//有些安卓app显示不全
-				add_num_app : 30,
-				add_num_app_key : 'rectify_code_key',
+				add_num : 30 ,
+				add_num_key : 'rectify_code_key',
 			}
 		},
 		props: {
@@ -103,7 +103,7 @@
 			let that = this;
 			try {
 				//app苹果二维码不居中
-				//#ifdef APP-PLUS
+				//#ifndef MP
 				let isAndroid = false ;
 			    const res = uni.getSystemInfoSync();
 			    if(res.platform == 'android'){
@@ -118,7 +118,16 @@
 				}
 				
 				that.isAndroid = isAndroid ;
+				try {
+					const add_num = uni.getStorageSync(that.add_num_key);
+					if (add_num) {
+						that.add_num = add_num;
+					}
+					
+				} catch (e) {
+					// error
 				
+				}
 				// #endif
 
 			} catch (e) {
@@ -141,19 +150,8 @@
 				var width = width*2 ;
 				
 				//#ifndef MP
-				var add = that.add_num_app ;
-				try {
-					const add_num = uni.getStorageSync(that.add_num_app_key);
-					if (add_num) {
-						that.add_num_app = add_num;
-					}
-					add = that.add_num_app ;
-					
-					
-				} catch (e) {
-					// error
+				var add = that.add_num ;
 				
-				}
 				height +=  add;
 				width +=  add;
 				// #endif
@@ -255,7 +253,7 @@
 					confirmColor: '#33CCCC',
 					success(res) {
 						if (res.confirm) {
-							that.rectify_code_app();
+							that.rectify_code();
 						}
 					}
 				})
@@ -276,16 +274,17 @@
 				// #endif
 			},
 			//安卓有些手机不正常，长按可选择矫正
-			rectify_code_app(){
+			rectify_code(){
 				var that = this;
-				let add_num_app = that.add_num_app ;
-				add_num_app += 30 ;
-				that.add_num_app = add_num_app;
+				let add_num = that.add_num ;
+				add_num += 30 ;
+				that.add_num = add_num;
+				that.crtQrCode();//重新生成才会立即覆盖
 				try {
 					//第一次长按校正设置了就不用在设置
 					uni.setStorage({
-						key: that.add_num_app_key,
-						data: add_num_app,
+						key: that.add_num_key,
+						data: add_num,
 						success: function() {
 							
 						}
